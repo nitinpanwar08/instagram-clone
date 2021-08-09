@@ -35,7 +35,7 @@ export default function SuggestedProfile({
           src={`/images/avatars/${username}.jpg`}
           alt="Profile"
           onError={(e) => {
-            e.target.src = '/images/avatars/default.png'
+            e.target.src = "/images/avatars/default.png";
           }}
         />
         <Link to={`/p/${username}`}>{username}</Link>
@@ -47,9 +47,7 @@ export default function SuggestedProfile({
         Follow
       </button>
     </div>
-  ) : (
-    <div></div>
-  );
+  ) : null;
 }
 
 SuggestedProfile.protoTypes = {
