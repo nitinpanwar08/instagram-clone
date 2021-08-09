@@ -7,6 +7,7 @@ import {
   updateFollowedUserFollowers,
 } from "../../services/firebase";
 
+  
 export default function SuggestedProfile({
   username,
   spDocId,
@@ -33,6 +34,9 @@ export default function SuggestedProfile({
           className="rounded-full w-8 flex mr-3"
           src={`/images/avatars/${username}.jpg`}
           alt="Profile"
+          onError={(e) => {
+            e.target.src = '/images/avatars/default.png'
+          }}
         />
         <Link to={`/p/${username}`}>{username}</Link>
       </div>

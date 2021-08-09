@@ -6,7 +6,7 @@ import { doesUserNameExists } from "../services/firebase";
 import * as ROUTES from "../constants/routes";
 
 const Signup = () => {
-  const [emailAddess, setEmailAddess] = useState("");
+  const [emailAddress, setEmailAddress] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [username, setUsername] = useState("");
@@ -15,7 +15,7 @@ const Signup = () => {
   const history = useHistory();
   const { firebase } = useContext(FirebaseContext);
 
-  const isInvalid = password === "" || emailAddess === "";
+  const isInvalid = password === "" || emailAddress === "";
 
   useEffect(() => {
     document.title = "Signup - Instagram";
@@ -33,7 +33,7 @@ const Signup = () => {
 
         const createdUserResult = await firebase
           .auth()
-          .createUserWithEmailAndPassword(emailAddess, password);
+          .createUserWithEmailAndPassword(emailAddress, password);
         await createdUserResult.user.updateProfile({
           displayName: username,
         });
@@ -43,16 +43,17 @@ const Signup = () => {
           userId: createdUserResult.user.uid,
           username: username.toLowerCase(),
           fullName,
-          emailAddess: emailAddess.toLowerCase(),
+          emailAddress: emailAddress.toLowerCase(),
           following: [],
           dateCreated: Date.now(),
+          followers: []
         });
 
         // Push to Dashboard
         history.push(ROUTES.DASHBOARD);
       } catch (err) {
         setFullName("");
-        setEmailAddess("");
+        setEmailAddress("");
         setPassword("");
         setError(err.message);
       }
@@ -103,10 +104,10 @@ const Signup = () => {
             <input
               aria-label="Enter your email address"
               type="email"
-              value={emailAddess}
+              value={emailAddress}
               placeholder="Email address"
               className="text-sm text-gray-base w-full mr-3 py-5 px-4 h-2 border border-gray-primary rounded mb-2"
-              onChange={(event) => setEmailAddess(event.target.value)}
+              onChange={(event) => setEmailAddress(event.target.value)}
             />
             <input
               aria-label="Enter your Password"

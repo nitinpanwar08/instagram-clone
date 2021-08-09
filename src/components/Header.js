@@ -1,5 +1,5 @@
 import React, { useContext } from "react";
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 
 import FirebaseContext from "../context/firebase";
 import UserContext from "../context/user";
@@ -8,6 +8,7 @@ import * as ROUTES from "../constants/routes";
 const Header = () => {
   const { firebase } = useContext(FirebaseContext);
   const { user } = useContext(UserContext);
+  let history = useHistory();
 
   return (
     <header className="h-16 bg-white border-b border-gray-primary mb-8">
@@ -47,7 +48,10 @@ const Header = () => {
                 <button
                   type="button"
                   title="Sign out"
-                  onClick={() => firebase.auth().signOut()}
+                  onClick={() => {
+                    firebase.auth().signOut();
+                    history.push(ROUTES.LOGIN);
+                  }}
                   onKeyDown={(event) => {
                     if (event.key === "Enter") firebase.auth().signOut();
                   }}
@@ -68,11 +72,14 @@ const Header = () => {
                   </svg>
                 </button>
                 <div className="flex items-center cursor-pointer">
-                  <Link to={`p/${user.displayName}`}>
+                  <Link to={`/p/${user?.displayName}`}>
                     <img
                       className="rounded-full h-8 w-8 flex"
-                      src={`/images/avatars/${user.displayName}.jpg`}
-                      alt={`${user.displayName} profile`}
+                      src={`/images/avatars/${user?.displayName}.jpg`}
+                      alt={`${user?.displayName} profile`}
+                      onError={(e) => {
+                        e.target.src = '/images/avatars/default.png'
+                      }}
                     />
                   </Link>
                 </div>

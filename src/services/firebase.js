@@ -10,6 +10,19 @@ export async function doesUserNameExists(username) {
   return result.size > 0;
 }
 
+export async function getUserByUsername(username) {
+  const result = await firebase
+    .firestore()
+    .collection("users")
+    .where("username", "==", username)
+    .get();
+
+  return result.docs.map((item) => ({
+    ...item.data(),
+    docId: item.id,
+  }));
+}
+
 export async function getUserByUserId(userId) {
   const result = await firebase
     .firestore()
@@ -92,3 +105,42 @@ export async function getPhotos(userId, following) {
 
   return photosWithUserDetails;
 }
+
+export async function getUserPhotosByUserId(userId) {
+  const result = await firebase
+    .firestore()
+    .collection("photos")
+    .where("userId", "==", userId)
+    .get();
+
+  return result.docs.map((item) => ({
+    ...item.data(),
+    docId: item.id,
+  }));
+}
+
+export const isUserFollowingProfile = async (loggedInUsername, profileUserId) => {
+  const result = await firebase
+    .firestore()
+    .collection('users')
+    .where('username', '==', loggedInUsername)
+    .where('following', 'array-contains', profileUserId)
+    .get()
+  
+  const [response = {}] = result.docs.map((item) => ({
+    ...item.data(),
+    docId: item.id
+  }))
+  return response.userId;
+}
+
+export const toggleFollow = async (isFollowingProfile , activeUserDocId, profileDocId, profileUserId, followingUserId) => {
+  await updateLoggedinUserFollowing(activeUserDocId, profileUserId, isFollowingProfile)
+  await updateFollowedUserFollowers(profileDocId, followingUserId, isFollowingProfile)
+}
+
+
+
+
+
+
